@@ -18,8 +18,8 @@ func (a *API) ping(w http.ResponseWriter, r *http.Request) {
 }
 
 type createDataDumpReq struct {
-	Sensor     string `json:"sensor,omitempty"`
-	DataValues string `json:"data_values,omitempty"`
+	Sensor     string   `json:"sensor,omitempty"`
+	DataValues []string `json:"data_values,omitempty"`
 }
 
 func (a *API) createDataDump(w http.ResponseWriter, r *http.Request) {

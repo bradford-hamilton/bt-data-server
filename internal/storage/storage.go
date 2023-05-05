@@ -2,10 +2,12 @@ package storage
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	// postgres driver
+
 	_ "github.com/lib/pq"
 )
 
@@ -14,11 +16,11 @@ type SQLDatabase interface {
 }
 
 type BTDataDump struct {
-	ID         int    `json:"id,omitempty"`
-	Sensor     string `json:"sensor,omitempty"`
-	DataValues string `json:"data_values,omitempty"`
-	CreatedAt  string `json:"created_at,omitempty"`
-	UpdatedAt  string `json:"updated_at,omitempty"`
+	ID         int      `json:"id,omitempty"`
+	Sensor     string   `json:"sensor,omitempty"`
+	DataValues []string `json:"data_values,omitempty"`
+	CreatedAt  string   `json:"created_at,omitempty"`
+	UpdatedAt  string   `json:"updated_at,omitempty"`
 }
 
 type Db struct {
@@ -53,8 +55,13 @@ func (db *Db) CreateDataDump(dd BTDataDump) error {
 	}
 	defer tx.Rollback()
 
+	dataValues, err := json.Marshal(dd.DataValues)
+	if err != nil {
+		return err
+	}
+
 	query := "INSERT INTO data_dumps (sensor, data_values) VALUES ($1, $2);"
-	if _, err := tx.Exec(query, dd.Sensor, dd.DataValues); err != nil {
+	if _, err := tx.Exec(query, dd.Sensor, dataValues); err != nil {
 		return err
 	}
 	if err := tx.Commit(); err != nil {
