@@ -1,3 +1,5 @@
+##### - quick and simple server for capturing temperature data from https://github.com/bradford-hamilton/temperature-logger
+
 ## Dependencies
 - Be sure to have Go (1.20+)
 - Be sure to have postgres running locally
